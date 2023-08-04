@@ -48,14 +48,14 @@ def embed(string):
 
 while True:
     with torch.no_grad():
-        starting_seq = input("Enter the starting sentence: ")
-        seq_to_sub = input("Enter the sequence to subtract: ")
-        seq_to_add = input("Enter the sequence to add: ")
+        starting_seq = input("\n\033[1;34mEnter the starting sentence:\033[0m ")
+        seq_to_sub = input("\n\033[1;34mEnter the sequence to subtract:\033[0m ")
+        seq_to_add = input("\n\033[1;34mEnter the sequence to add:\033[0m ")
 
         embedding = embed(starting_seq) - embed(seq_to_sub) + embed(seq_to_add)
 
-        print(enc.decode(model.generate(embedding, max_new_tokens, temperature=temperature).tolist()))
+        print("\n\033[1;32m" + enc.decode(model.generate(embedding, max_new_tokens, temperature=temperature).tolist()) + "\033[0m")
 
-    quit = input("Do you want to quit? (y/n): ")
+    quit = input("\n\033[1;34mDo you want to quit? (y/n):\033[0m ")
     if quit.lower() == "y":
         break
