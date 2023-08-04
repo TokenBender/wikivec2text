@@ -21,9 +21,9 @@ exec(open('configurator.py').read())  # overrides from command line or config fi
 seed = 1337
 torch.manual_seed(seed)
 torch.cuda.manual_seed(seed)
-torch.backends.cuda.matmul.allow_tf32 = True # allow tf32 on matmul
-torch.backends.cudnn.allow_tf32 = True # allow tf32 on cudnn
-device_type = 'cuda' if 'cuda' in device else 'cpu' # for later use in torch.autocast
+torch.backends.cuda.matmul.allow_tf32 = True  # allow tf32 on matmul
+torch.backends.cudnn.allow_tf32 = True  # allow tf32 on cudnn
+device_type = 'cuda' if 'cuda' in device else 'cpu'  # for later use in torch.autocast
 ptdtype = {'float32': torch.float32, 'bfloat16': torch.bfloat16, 'float16': torch.float16}[dtype]
 ctx = nullcontext() if device_type == 'cpu' else torch.amp.autocast(device_type=device_type, dtype=ptdtype)
 
@@ -46,11 +46,16 @@ def embed(string):
         input=string
     )['data'][0]['embedding'], device=device)
 
-with torch.no_grad():
-    starting_seq = "Revolver is the seventh album by the English rock band the Beatles."
-    seq_to_sub = "The Beatles are a rock band."
-    seq_to_add = "The Beatles are a classical band."
+while True:
+    with torch.no_grad():
+        starting_seq = input("Enter the starting sentence: ")
+        seq_to_sub = input("Enter the sequence to subtract: ")
+        seq_to_add = input("Enter the sequence to add: ")
 
-    embedding = embed(starting_seq) - embed(seq_to_sub) + embed(seq_to_add)
+        embedding = embed(starting_seq) - embed(seq_to_sub) + embed(seq_to_add)
 
-    print(enc.decode(model.generate(embedding, max_new_tokens, temperature=temperature).tolist()))
+        print(enc.decode(model.generate(embedding, max_new_tokens, temperature=temperature).tolist()))
+
+    quit = input("Do you want to quit? (y/n): ")
+    if quit.lower() == "y":
+        break
